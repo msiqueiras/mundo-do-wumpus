@@ -5,7 +5,7 @@
 "Mundo do Wumpus" é um jogo de raciocínio lógico, que muitas vezes é utilizado para explicação introdutória de agentes inteligentes na exploração de ambientes.No jogo, o agente precisa passear pelos ambientes com o objetivo de capturar uma recompensa (ouro) e retornar para a posição de início (0,0) com o menor número de passos possíveis, evitando cair em poços e/ou ser capturado pelo monstro Wumpus.
 O ambiente fornece percepções para o agente, como fedores do Wumpus, brisas dos poços e brilho do ouro, em ambientes adjacentes àqueles que possuem o perigo ou a recompensa.
 
-![Explicação visual do jogo](/images/wumpus.svg)
+![Explicação visual do jogo](/images/wumpus2.svg)
 
 ## Organização do código
 
