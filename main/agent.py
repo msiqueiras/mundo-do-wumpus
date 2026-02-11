@@ -26,9 +26,9 @@ def new_position(agent, direction):
     if agent['position'][1] == 3 and direction == 'L': #não vaza pela direita
         print('Não é possível ir para a direção leste posição atual.')
     if agent['position'][0] == 0 and direction == 'N': #não vaza por cima
-        print('Não é possível ir para a direção leste na posição atual.')
+        print('Não é possível ir para a direção norte na posição atual.')
     if agent['position'][0] == 3 and direction == 'S': #não vaza por baixo
-        print('Não é possível ir para a direção leste na posição atual.')
+        print('Não é possível ir para a direção sul na posição atual.')
 
 
     if direction == 'L':
