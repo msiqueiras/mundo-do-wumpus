@@ -1,5 +1,10 @@
-world = [('V', 'B', 'P', 'B'),
-         ('F', 'V', 'B', 'P'), 
-         ('W', 'F', 'V', 'B'), 
-         ('F', 'V', 'V', 'O')]
+def create_world():
+
+    world = [('V', 'B', 'P', 'B'),
+            ('F', 'V', 'B', 'P'), 
+            ('W', 'F', 'V', 'B'), 
+            ('F', 'V', 'V', 'O')]
+
+    return world
+
 

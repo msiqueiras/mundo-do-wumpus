@@ -1,17 +1,15 @@
-import util 
+import useful as useful 
 import agent
 
-print(25*'=', 'Mundo do Wumpus', 25*'=')
-print('Características iniciais do herói:')
-print('Posição: (0,0) \nVidas: 3 \nFlechas: 1 \nSem ouro \nSem histórico')        
-print(67*'=')
+useful.intro()
+hero = agent.create_agent()
 
 flow_game = True
 while flow_game:
     try:
-        hero = agent.create()
+        agent.actual_status(hero)
 
-        util.action_menu()
+        useful.action_menu()
 
         action = int(input('Digite o código da ação:'))
 
