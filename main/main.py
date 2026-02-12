@@ -1,8 +1,10 @@
 import useful as useful 
 import agent
+import worldmap
 
 useful.intro()
 hero = agent.create_agent()
+world = worldmap.create_world()
 
 flow_game = True
 while flow_game:
@@ -23,6 +25,10 @@ while flow_game:
                 if move in ['N', 'S', 'L', 'O']:
                     flow_move = False
                     hero = agent.new_position(hero, move)
+                    hero = agent.room_perception(hero, world)
+                    if hero == False:
+                        flow_game = False
+                        
                 else:
                     print('Código de direção inválido. Digite novamente')
 
