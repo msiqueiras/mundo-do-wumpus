@@ -9,9 +9,16 @@ O ambiente fornece percepções para o agente, como fedores do Wumpus, brisas do
 
 ## Organização do código
 
-O código está organizado em somente um diretório nomeado como "main" e possui os seguintes módulos:
+O código está estruturado segundo a seguinte organização de pastas:
 
-- agent.py: contém funções referentes ao agente;
-- main.py: contém o looping do fluxo do jogo;
-- util.py: contém funções auxiliares do projeto;
-- worldmap.py: contém funções referentes a criação do mapa do mundo.
+```text
+MUNDO-DO-WUMPUS/
+├── images/                # Recursos visuais para relatório e readme
+├── main/                 
+│   ├── agent.py           # Funções da lógica do agente
+│   ├── main.py            # Script principal
+│   ├── useful.py          # Utilitários e menus
+│   └── worldmap.py        # Funções da lógica do mapa
+├── .gitignore
+├── README.md
+└── requirements.txt

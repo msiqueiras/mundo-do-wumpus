@@ -9,7 +9,7 @@ world = worldmap.create_world()
 flow_game = True
 while flow_game:
     try:
-        agent.actual_status(hero)
+        agent.current_status(hero)
 
         useful.action_menu()
 

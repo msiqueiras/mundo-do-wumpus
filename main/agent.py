@@ -46,7 +46,7 @@ def new_position(agent, direction):
     return agent
 
 
-def actual_status(agent):
+def current_status(agent):
     '''
     Função para mostrar para o jogador os status do agente naquele momento    
     :param agent: agente criado pelo método create_agent()
