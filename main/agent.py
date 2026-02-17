@@ -3,13 +3,58 @@ def create_agent():
     Função para criar um agente novo com todas os dados iniciais
     '''
 
+    # adicionei um histórico de posições pq ele pediu no pdf
+
     agent = {'position': [0,0],
              'lives': 2,
              'arrow': 1,
              'gold': False,
-             'perceptions': []}
+             'perceptions': [],
+             'history': []}
     
     return agent
+
+
+def shoot_arrow(agent, world, direction):
+    '''
+    Função para atirar uma flecha na direção especificada
+    :param agent: agente do jogo
+    :param world: mapa do jogo
+    :param direction: direção do tiro (N, S, O, L)
+    :return: True se matou o Wumpus, False caso contrário
+    '''
+    
+    if agent['arrow'] > 0:
+        agent['arrow'] -= 1
+        print('Você atirou uma flecha!')
+        
+        row, col = agent['position']
+        target_pos = None
+        
+        if direction == 'N':
+            target_pos = [row - 1, col]
+        elif direction == 'S':
+            target_pos = [row + 1, col]
+        elif direction == 'L':
+            target_pos = [row, col + 1]
+        elif direction == 'O':
+            target_pos = [row, col - 1]
+            
+        # Verificar limites do mapa (assumindo 4x4)
+        if target_pos and 0 <= target_pos[0] < 4 and 0 <= target_pos[1] < 4:
+            tr, tc = target_pos
+            if world[tr][tc] == 'W':
+                print('Você ouviu um grito terrível! O Wumpus foi morto!')
+                return True
+            else:
+                print('A flecha atingiu a parede ou o chão, mas não houve grito.')
+        else:
+            print('A flecha atingiu a parede.')
+            
+    else:
+        print('Você não tem mais flechas!')
+        
+    return False
 
 
 def new_position(agent, direction):
@@ -18,30 +63,40 @@ def new_position(agent, direction):
     :param agent: agente criado pelo método create_agent()
     :param direction: direção que se deseja ir
     '''
+
+
+    moved = False
     
     if direction == 'N':
         if agent['position'][0] == 0:
             print('Não é possível ir para o NORTE na posição atual. Você esbarrou em uma barreira para cima.')
         else:
             agent['position'][0] -= 1
+            moved = True
     
     elif direction == 'S':
         if agent['position'][0] == 3:
             print('Não é possível ir para o SUL na posição atual. Você esbarrou em uma barreira para baixo.')
         else:
             agent['position'][0] += 1
+            moved = True
     
     elif direction == 'O':
         if agent['position'][1] == 0:
             print('Não é possível ir para o OESTE na posição atual. Você esbarrou em uma barreira à esquerda')
         else:
             agent['position'][1] -= 1
+            moved = True
     
     elif direction == 'L':
         if agent['position'][1] == 3:
             print('Não é possível ir para o LESTE na posição atual. Você esbarrou em uma barreira à direita')
         else:
             agent['position'][1] += 1
+            moved = True
+
+    if moved:
+        agent['history'].append(tuple(agent['position']))
 
     return agent
 
@@ -52,14 +107,39 @@ def current_status(agent):
     :param agent: agente criado pelo método create_agent()
     '''
 
-    agent_pt_br = {'Posição': agent['position'],
-                 'Vidas': agent['lives'], 
-                 'Flecha': agent['arrow'], 
-                 'Ouro': agent['gold'], 
-                 'Percepções': agent['perceptions']}
     print(26*'-','Status agente', 26*'-')
-    for key, value in agent_pt_br.items():
-        print(f'{key}: {value}')
+    print(f"Posição: {agent['position']}")
+    print(f"Vidas: {agent['lives']}")
+    print(f"Flecha: {agent['arrow']}")
+    print(f"Ouro: {agent['gold']}")
+    
+    print("Percepções:")
+    if not agent['perceptions']:
+        print("  Nenhuma")
+    else:
+        current_row, current_col = agent['position']
+        for p in agent['perceptions']:
+            perc_pos = p[0]
+            perc_type = p[1]
+            perc_row, perc_col = perc_pos
+            
+            # Calcular diferença relativa
+            dr = perc_row - current_row
+            dc = perc_col - current_col
+            
+            dirs = []
+            if dr < 0: dirs.append("Norte")
+            elif dr > 0: dirs.append("Sul")
+            
+            if dc < 0: dirs.append("Oeste")
+            elif dc > 0: dirs.append("Leste")
+            
+            if not dirs:
+                direction = "Aqui"
+            else:
+                direction = "-".join(dirs)
+
+            print(f"  [{direction}] -> {perc_type}")
 
 
 def room_perception(agent, world):
@@ -91,6 +171,13 @@ def room_perception(agent, world):
         new_perception = [[row, column], 'Fedor']
         if new_perception not in agent['perceptions']:
             agent['perceptions'].append(new_perception)
+
+    elif world_cell == 'W':
+        print('Você foi devorado pelo Wumpus!')
+        new_perception = [[row, column], 'Wumpus']
+        if new_perception not in agent['perceptions']:
+            agent['perceptions'].append(new_perception)
+        agent = lose_life(agent)
         
     elif world_cell == 'P':
         print('Você caiu em um POÇO.')
@@ -99,7 +186,34 @@ def room_perception(agent, world):
             agent['perceptions'].append(new_perception)
         agent = lose_life(agent)
 
+    elif world_cell == 'O':
+        print('Percepção do ambiente: Brilho. \nHá ouro nesta sala!')
+        new_perception = [[row, column], 'Brilho']
+        if new_perception not in agent['perceptions']:
+            agent['perceptions'].append(new_perception)
+
     return agent
+
+
+def pick_gold(agent, world):
+    '''
+    Função para o agente pegar o ouro
+    :param agent: agente do jogo
+    :param world: mapa do jogo
+    :return: True se pegou o ouro, False caso contrário
+    '''
+    row, col = agent['position']
+    if world[row][col] == 'O':
+        if not agent['gold']:
+            agent['gold'] = True
+            print('Você pegou o ouro!')
+            return True
+        else:
+            print('Você já pegou o ouro!')
+            return False
+    else:
+        print('Não há ouro aqui para pegar.')
+        return False
     
 
 def lose_life(agent):
