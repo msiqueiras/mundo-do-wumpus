@@ -111,7 +111,10 @@ def current_status(agent):
     print(f"Posição: {agent['position']}")
     print(f"Vidas: {agent['lives']}")
     print(f"Flecha: {agent['arrow']}")
-    print(f"Ouro: {agent['gold']}")
+    if agent['gold'] == True:
+        print("Ouro: Já pego")
+    else:
+        print('Ouro: Ainda não foi pego')
     
     print("Percepções:")
     if not agent['perceptions']:
@@ -185,6 +188,11 @@ def room_perception(agent, world):
         if new_perception not in agent['perceptions']:
             agent['perceptions'].append(new_perception)
         agent = lose_life(agent)
+        try:
+            if agent['lives'] != 0:
+                print('Você retornou para a posição inicial (0,0)')
+        except TypeError:
+            pass
 
     elif world_cell == 'O':
         print('Percepção do ambiente: Brilho. \nHá ouro nesta sala!')
@@ -225,7 +233,7 @@ def lose_life(agent):
     agent['lives'] -= 1
     agent['position'] = [0,0]
     if agent['lives'] == 0:
-        print('Você perdeu!')
+        print('\033[31mVOCÊ PERDEU!! Talvez da próxima vez você tenha mais sorte.\033[m')
         return False #para parar o ciclo do jogo - break.
     
     return agent

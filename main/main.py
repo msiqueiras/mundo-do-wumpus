@@ -25,21 +25,20 @@ while flow_game:
         if action == 1: #1 é opção de movimento
             flow_move = True
             while flow_move:
-                move = str(input('''
-                         N               
+                move = str(input('''nem
+                        N               
 Direção (N,S,O,L):    O     L
-                         S
+                        S
                 ''')).strip().upper()[0]
                 if move in ['N', 'S', 'L', 'O']:
                     flow_move = False
                     hero = agent.new_position(hero, move)
                     hero = agent.room_perception(hero, world)
-                    if hero == False:
+                    if hero == False: #herói morto
                         flow_game = False
                     
                     elif hero['gold'] == True and hero['position'] == [0,0]:
-                        # lembrar de colocar uma frase de vitóriaxe legal sla
-                        print('Parabéns! Você encontrou o ouro e retornou ao início a salvo!')
+                        print('\033[32mPARABÉNS !! Você conseguiu pegar o ouro e voltar a salvo!!\033[m')
                         flow_game = False
                         
                 else:
@@ -57,7 +56,7 @@ Direção da flecha (N,S,O,L):    O     L
                     flow_arrow = False
                     wumpus_killed = agent.shoot_arrow(hero, world, direcao_flecha)
                     if wumpus_killed:
-                         # Troca o mapa atual pelo mapa sem wumpus e sem edor
+                         # Troca o mapa atual pelo mapa sem wumpus e sem fedor
                          world = worldmap.get_clean_map(map_id)
                 else:
                     print('Código de direção inválido. Digite novamente')
